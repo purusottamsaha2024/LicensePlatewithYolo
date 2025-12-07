@@ -1,0 +1,27 @@
+<div class="bg-[#0a0a0a] border-b border-gray-800 px-6 py-3 flex justify-between items-center">
+    <div class="font-mono text-lg text-white font-semibold">
+        AVALON RIO ORO
+    </div>
+    <div class="flex items-center gap-4">
+        <div class="font-mono text-sm text-gray-300 flex items-center gap-2">
+            <span>SYSTEM:</span>
+            <span class="text-[#00FF41]">ONLINE</span>
+            <span class="w-2 h-2 bg-[#00FF41] rounded-full animate-pulse"></span>
+        </div>
+        <div class="font-mono text-sm text-gray-300">
+            PING: 4ms
+        </div>
+        <button 
+            hx-post="/test/simulate_detection"
+            hx-vals='{"plate":"ABC123"}'
+            hx-target="#decision-panel"
+            hx-swap="outerHTML"
+            class="font-mono text-xs bg-[#00FF41]/20 text-[#00FF41] px-2 py-1 rounded hover:bg-[#00FF41]/30 transition-colors">
+            🧪 TEST ABC123
+        </button>
+        <a href="/admin/login" class="font-mono text-sm text-gray-400 hover:text-white transition-colors">
+            🔒 ADMIN LOGIN
+        </a>
+    </div>
+</div>
+

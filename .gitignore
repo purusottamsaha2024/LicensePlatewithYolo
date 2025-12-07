@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# CSV data files (optional - you may want to track these)
+# whitelist.csv
+# traffic_log.csv
+
+# Images directory
+images/
+*.jpg
+*.jpeg
+*.png
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model files
+*.pt
+*.pth
+*.onnx
+
+# Logs
+*.log
+
+

@@ -1,0 +1,114 @@
+{% set detection = detection or {} %}
+{% set status = detection.get('status', 'UNKNOWN') %}
+{% set plate = detection.get('plate') or '---' %}
+{% set resident_info = detection.get('resident_info') or {} %}
+
+<!-- Top State Block (Big Green/Red Screen) -->
+<div class="flex-1 flex flex-col">
+    <div class="flex-1 rounded-lg mb-4 flex items-center justify-center transition-all duration-300
+        {% if status == 'AUTHORIZED' or status == 'ENTERED' %}
+            bg-gradient-to-br from-[#00FF41]/20 to-[#00FF41]/5 border-2 border-[#00FF41] shadow-lg shadow-[#00FF41]/20
+        {% elif status == 'UNKNOWN' or status == 'BLOCKED' %}
+            bg-gradient-to-br from-[#FF003C]/20 to-[#FF003C]/5 border-2 border-[#FF003C] shadow-lg shadow-[#FF003C]/20
+        {% else %}
+            bg-gray-900 border-2 border-gray-700
+        {% endif %}">
+        
+        <div class="text-center p-8">
+            <div class="font-mono text-4xl font-bold mb-2
+                {% if status == 'AUTHORIZED' or status == 'ENTERED' %}
+                    text-[#00FF41]
+                {% elif status == 'UNKNOWN' or status == 'BLOCKED' %}
+                    text-[#FF003C]
+                {% else %}
+                    text-gray-400
+                {% endif %}">
+                {% if status == 'AUTHORIZED' or status == 'ENTERED' %}
+                    AUTHORIZED
+                {% elif status == 'UNKNOWN' %}
+                    UNKNOWN
+                {% elif status == 'BLOCKED' %}
+                    DENIED
+                {% else %}
+                    STANDBY
+                {% endif %}
+            </div>
+            
+            {% if status == 'AUTHORIZED' or status == 'ENTERED' %}
+                {% if resident_info.get('unit') %}
+                    <div class="font-mono text-2xl text-[#00FF41] mt-4">
+                        RESIDENT: UNIT {{ resident_info.get('unit') }}
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Details Panel -->
+    <div class="bg-[#0f0f0f] border border-gray-800 rounded-lg p-4 mb-4 space-y-2">
+        <div class="flex justify-between">
+            <span class="text-gray-400 text-sm">Plate:</span>
+            <span class="font-mono text-[#00FF41]">{{ plate }}</span>
+        </div>
+        <div class="flex justify-between">
+            <span class="text-gray-400 text-sm">Status:</span>
+            <span class="font-mono 
+                {% if status == 'AUTHORIZED' or status == 'ENTERED' %}text-[#00FF41]
+                {% elif status == 'UNKNOWN' or status == 'BLOCKED' %}text-[#FF003C]
+                {% else %}text-gray-400{% endif %}">
+                {{ status }}
+            </span>
+        </div>
+        {% if resident_info.get('resident_name') %}
+        <div class="flex justify-between">
+            <span class="text-gray-400 text-sm">Resident:</span>
+            <span class="font-mono text-gray-200">{{ resident_info.get('resident_name') }}</span>
+        </div>
+        {% endif %}
+        {% if resident_info.get('destination') %}
+        <div class="flex justify-between">
+            <span class="text-gray-400 text-sm">Destination:</span>
+            <span class="font-mono text-gray-200 text-xs">{{ resident_info.get('destination') }}</span>
+        </div>
+        {% endif %}
+        {% if resident_info.get('source') %}
+        <div class="flex justify-between">
+            <span class="text-gray-400 text-sm">Source:</span>
+            <span class="font-mono text-gray-200 text-xs">{{ resident_info.get('source') }}</span>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="space-y-3">
+        <button 
+            hx-post="/action/open_gate"
+            hx-target="#decision-panel"
+            hx-swap="outerHTML"
+            class="w-full py-4 px-6 rounded-lg font-mono text-lg font-semibold
+                {% if status == 'AUTHORIZED' %}
+                    bg-[#00FF41] text-black hover:bg-[#00FF41]/90 shadow-lg shadow-[#00FF41]/30 animate-pulse
+                {% else %}
+                    bg-gray-700 text-gray-400 cursor-not-allowed
+                {% endif %}
+                transition-all duration-200">
+            [ OPEN GATE ]
+        </button>
+        
+        <button 
+            hx-post="/action/deny_entry"
+            hx-target="#decision-panel"
+            hx-swap="outerHTML"
+            class="w-full py-4 px-6 rounded-lg font-mono text-lg font-semibold
+                {% if status == 'UNKNOWN' or status == 'AUTHORIZED' %}
+                    bg-[#FF003C] text-white hover:bg-[#FF003C]/90 shadow-lg shadow-[#FF003C]/30
+                {% else %}
+                    bg-gray-700 text-gray-400 cursor-not-allowed
+                {% endif %}
+                transition-all duration-200">
+            [ DENY ENTRY ]
+        </button>
+    </div>
+</div>
+
+

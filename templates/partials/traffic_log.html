@@ -1,0 +1,44 @@
+<div class="flex flex-col h-full">
+    <div class="mb-4">
+        <h2 class="font-mono text-xl font-bold text-[#00FF41] mb-1">LIVE TRAFFIC LOG</h2>
+        <p class="font-mono text-xs text-gray-400">Last 50 Events</p>
+    </div>
+    
+    <div class="flex-1 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+        {% if log_entries %}
+            {% for entry in log_entries %}
+            <div class="bg-[#0f0f0f] border border-gray-800 rounded p-3 hover:border-[#00FF41]/30 transition-colors">
+                <div class="flex justify-between items-start mb-1">
+                    <span class="font-mono text-xs text-gray-400">
+                        {{ entry.get('timestamp', '')[-8:] if entry.get('timestamp') else '--:--:--' }}
+                    </span>
+                    <span class="font-mono text-xs
+                        {% if entry.get('decision') == 'ENTERED' or entry.get('decision') == 'AUTHORIZED' %}
+                            text-[#00FF41]
+                        {% elif entry.get('decision') == 'BLOCKED' or entry.get('decision') == 'UNKNOWN' %}
+                            text-[#FF003C]
+                        {% else %}
+                            text-gray-400
+                        {% endif %}">
+                        {{ entry.get('decision', 'UNKNOWN') }}
+                    </span>
+                </div>
+                <div class="font-mono text-sm text-gray-200">
+                    Plate: {{ entry.get('plate', '---') }}
+                </div>
+                {% if entry.get('visitor_name') %}
+                <div class="font-mono text-xs text-gray-400 mt-1">
+                    {{ entry.get('visitor_name') }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center py-8">
+                <p class="font-mono text-sm text-gray-500">No log entries yet</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+
